@@ -1,6 +1,6 @@
 package cache
 
-type Store interface {
+type CacheStoreInterface interface {
 	Get(key string) (string, error)
 	Load(key string, object interface{}) error
 	Set(key string, value interface{}) error
