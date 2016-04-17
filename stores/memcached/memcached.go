@@ -29,8 +29,11 @@ func (memcached *Memcached) KeyWithNameSpance(key string) string {
 }
 
 func (memcached *Memcached) Get(key string) (string, error) {
-	item, err := memcached.Client.Get(memcached.KeyWithNameSpance(key))
-	return string(item.Value), err
+	if item, err := memcached.Client.Get(memcached.KeyWithNameSpance(key)); err == nil {
+		return string(item.Value), nil
+	} else {
+		return "", err
+	}
 }
 
 func (memcached *Memcached) Unmarshal(key string, object interface{}) error {
