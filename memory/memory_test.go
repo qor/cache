@@ -1,4 +1,4 @@
-package memcached
+package memory
 
 import (
 	"reflect"
@@ -10,7 +10,7 @@ import (
 var client cache.CacheStoreInterface
 
 func init() {
-	client = New(&Config{Hosts: []string{"127.0.0.1:11211"}})
+	client = New()
 }
 
 func TestPlainText(t *testing.T) {
