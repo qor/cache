@@ -10,11 +10,11 @@ var ErrNotFound = errors.New("not found")
 
 type Memory struct {
 	values map[string][]byte
-	mutex  sync.RWMutex
+	mutex  *sync.RWMutex
 }
 
 func New() *Memory {
-	return &Memory{values: map[string][]byte{}}
+	return &Memory{values: map[string][]byte{}, mutex: &sync.RWMutex{}}
 }
 
 func (memory *Memory) Get(key string) (string, error) {
