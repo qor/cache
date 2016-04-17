@@ -16,11 +16,19 @@ func TestPlainText(t *testing.T) {
 		t.Errorf("found value: %v", value)
 	}
 
+	if err := memcached.Set("hello_world", "Hello World2"); err != nil {
+		t.Errorf("No error should happen when updating saved value")
+	}
+
+	if value, err := memcached.Get("hello_world"); err != nil || value != "Hello World2" {
+		t.Errorf("value should been updated: %v", value)
+	}
+
 	if err := memcached.Delete("hello_world"); err != nil {
 		t.Errorf("failed to delete value: %v", err)
 	}
 
-	if value, err := memcached.Get("hello_world"); err == nil || value == "Hello World" {
+	if _, err := memcached.Get("hello_world"); err == nil {
 		t.Errorf("the key should been deleted")
 	}
 }
@@ -49,5 +57,23 @@ func TestUnmarshal(t *testing.T) {
 
 	if err := memcached.Unmarshal("unmarshal", &r2); err == nil {
 		t.Errorf("the key should been deleted")
+	}
+}
+
+func TestFetch(t *testing.T) {
+	memcached := New(&Config{Hosts: []string{"127.0.0.1:11211"}})
+
+	var result int
+	var fc = func() interface{} {
+		result++
+		return result
+	}
+
+	if value, err := memcached.Fetch("fetch", fc); err != nil || value != "1" {
+		t.Errorf("Should get result from func if key not found")
+	}
+
+	if value, err := memcached.Fetch("fetch", fc); err != nil || value != "1" {
+		t.Errorf("Should lookup result from memcache if key is existing")
 	}
 }
