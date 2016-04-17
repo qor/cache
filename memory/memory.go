@@ -3,12 +3,14 @@ package memory
 import (
 	"encoding/json"
 	"errors"
+	"sync"
 )
 
 var ErrNotFound = errors.New("not found")
 
 type Memory struct {
 	values map[string][]byte
+	mutex  sync.RWMutex
 }
 
 func New() *Memory {
@@ -16,6 +18,9 @@ func New() *Memory {
 }
 
 func (memory *Memory) Get(key string) (string, error) {
+	memory.mutex.RLock()
+	defer memory.mutex.RUnlock()
+
 	if value, ok := memory.values[key]; ok {
 		return string(value), nil
 	}
@@ -23,6 +28,9 @@ func (memory *Memory) Get(key string) (string, error) {
 }
 
 func (memory *Memory) Unmarshal(key string, object interface{}) error {
+	memory.mutex.RLock()
+	defer memory.mutex.RUnlock()
+
 	if value, ok := memory.values[key]; ok {
 		return json.Unmarshal(value, object)
 	}
@@ -42,6 +50,9 @@ func convertToBytes(value interface{}) []byte {
 }
 
 func (memory *Memory) Set(key string, value interface{}) error {
+	memory.mutex.Lock()
+	defer memory.mutex.Unlock()
+
 	memory.values[key] = convertToBytes(value)
 	return nil
 }
