@@ -2,7 +2,7 @@
 
 Cache Store
 
-## Usage
+## Memcached Cache Store Usage
 
 ```go
 import "github.com/qor/cache/memcached"
@@ -23,12 +23,23 @@ func main() {
 	err := client.Unmarshal("user", &user2)
 
   // Fetch saved value with key `hello_world`, if haven't find, will save returned result of `func` into cached store with passed key
-	result, err := Fetch("hello_world", func() interface{} {
+	result, err := client.Fetch("hello_world", func() interface{} {
     return "..."
   })
 
   // Delete saved value
-	err := Delete(key string)
+	err := client.Delete(key string)
+}
+```
+
+## Memory Cache Store Usage
+
+```go
+import "github.com/qor/cache/memory"
+
+func main() {
+  client := memory.New()
+  // Same API with memcached cache store
 }
 ```
 
