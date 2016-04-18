@@ -66,6 +66,9 @@ func (memory *Memory) Fetch(key string, fc func() interface{}) (string, error) {
 }
 
 func (memory *Memory) Delete(key string) error {
+	memory.mutex.Lock()
+	defer memory.mutex.Unlock()
+
 	delete(memory.values, key)
 	return nil
 }
