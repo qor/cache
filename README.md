@@ -44,6 +44,21 @@ func main() {
 }
 ```
 
+## Redis Cache Store Usage
+
+```go
+import "github.com/qor/cache/redis"
+
+func main() {
+  client = New(&redis.Options{Addr: "127.0.0.1:6379",
+    Password: "",   // no password set
+    DB:       0,    // use default DB
+    PoolSize: 100,
+  })
+  // Same API as memcached cache store
+}
+```
+
 ## License
 
 Released under the [MIT License](http://opensource.org/licenses/MIT).
