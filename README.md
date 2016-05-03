@@ -16,13 +16,14 @@ func main() {
   // Get saved value with key `hello_world`
   result, err := client.Get("hello_world")
 
-  // Save marshal value of user into cache store
+  // Save marshalled value of user into cache store
   err := client.Set("user", user)
 
   // Unmarshal saved value into user2
   err := client.Unmarshal("user", &user2)
 
-  // Fetch saved value with key `hello_world`, if haven't find, will save returned result of `func` into cached store with passed key
+  // Fetch saved value with key `hello_world`; if the key does not exist, the
+  // returned result of `func` will be saved into cache store under passed key
   result, err := client.Fetch("hello_world", func() interface{} {
     return "..."
   })
@@ -39,7 +40,7 @@ import "github.com/qor/cache/memory"
 
 func main() {
   client := memory.New()
-  // Same API with memcached cache store
+  // Same API as memcached cache store
 }
 ```
 
